@@ -6,9 +6,9 @@ import (
 	"log"
 	"time"
 
+	"github.com/Tony-Bridges/mobilevault-backendv1/db"
+	"github.com/Tony-Bridges/mobilevault-backendv1/models"
 	"github.com/google/uuid"
-	"github.com/yourusername/mobilevault-backend/db"
-	"github.com/yourusername/mobilevault-backend/models"
 )
 
 type OrchestratorService struct {
@@ -44,10 +44,10 @@ func (s *OrchestratorService) CreateSession(ctx context.Context, req *models.Cre
 	}
 	if existingSession != nil {
 		return &models.CreateSessionResponse{
-			SessionID:   existingSession.ID,
+			SessionID:    existingSession.ID,
 			StreamingURL: existingSession.StreamingURL,
-			WebRTCOffer: existingSession.WebRTCOffer,
-			Status:      existingSession.Status,
+			WebRTCOffer:  existingSession.WebRTCOffer,
+			Status:       existingSession.Status,
 		}, nil
 	}
 
@@ -72,15 +72,15 @@ func (s *OrchestratorService) CreateSession(ctx context.Context, req *models.Cre
 	// 5. Create VM session record
 	sessionID := uuid.New().String()
 	session := &models.VMSession{
-		ID:          sessionID,
-		UserID:      userID,
-		DeviceID:    req.DeviceID,
-		SnapshotID:  snapshotID,
-		VMHostID:    vmHost.ID,
-		OverlayPath: overlayPath,
-		Status:      "creating",
-		CreatedAt:   time.Now(),
-		StartedAt:   time.Now(),
+		ID:           sessionID,
+		UserID:       userID,
+		DeviceID:     req.DeviceID,
+		SnapshotID:   snapshotID,
+		VMHostID:     vmHost.ID,
+		OverlayPath:  overlayPath,
+		Status:       "creating",
+		CreatedAt:    time.Now(),
+		StartedAt:    time.Now(),
 		LastActivity: time.Now(),
 	}
 
@@ -92,8 +92,8 @@ func (s *OrchestratorService) CreateSession(ctx context.Context, req *models.Cre
 	go s.provisionVM(session, vmHost)
 
 	return &models.CreateSessionResponse{
-		SessionID:   sessionID,
-		Status:      "creating",
+		SessionID: sessionID,
+		Status:    "creating",
 	}, nil
 }
 
@@ -114,7 +114,7 @@ func (s *OrchestratorService) provisionVM(session *models.VMSession, vmHost *mod
 
 	// Update session with streaming URL and WebRTC offer
 	streamingURL := fmt.Sprintf("wss://%s/stream/%s", vmHost.IPAddress, session.ID)
-	
+
 	// In real implementation, you'd call the VM host API
 	// For now, we'll update the database
 	if err := s.db.UpdateVMSessionStatus(ctx, session.ID, "active"); err != nil {

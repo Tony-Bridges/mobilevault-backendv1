@@ -3,9 +3,8 @@ package db
 import (
 	"context"
 	"fmt"
-	"time"
 
-	"github.com/yourusername/mobilevault-backend/models"
+	"github.com/Tony-Bridges/mobilevault-backendv1/models"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -33,7 +32,7 @@ func (r *Repository) CreateUser(ctx context.Context, user *models.User) error {
 func (r *Repository) GetUserByEmail(ctx context.Context, email string) (*models.User, error) {
 	query := `SELECT * FROM users WHERE email = $1 AND is_active = true`
 	row := r.db.Postgres.QueryRow(ctx, query, email)
-	
+
 	var user models.User
 	err := row.Scan(
 		&user.ID, &user.Email, &user.EncryptedMasterKey,
@@ -164,7 +163,7 @@ func (r *Repository) GetActiveSession(ctx context.Context, userID, deviceID stri
 		LIMIT 1
 	`
 	row := r.db.Postgres.QueryRow(ctx, query, userID, deviceID)
-	
+
 	var session models.VMSession
 	err := row.Scan(
 		&session.ID, &session.UserID, &session.DeviceID, &session.SnapshotID,
@@ -194,7 +193,7 @@ func (r *Repository) FindAvailableVMHost(ctx context.Context, region string, req
 		LIMIT 1
 	`
 	row := r.db.Postgres.QueryRow(ctx, query, region, requireGPU)
-	
+
 	var host models.VMHost
 	err := row.Scan(
 		&host.ID, &host.Hostname, &host.Region, &host.IPAddress,

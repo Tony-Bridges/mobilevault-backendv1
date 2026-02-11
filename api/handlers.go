@@ -3,14 +3,15 @@ package api
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
+	"github.com/Tony-Bridges/mobilevault-backendv1/models"
 	"github.com/gorilla/mux"
-	"github.com/Tony-Bridges/mobilevault-backend/models"
 )
 
 func (s *Server) createSession(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value("user_id").(string)
-	
+
 	var req models.CreateSessionRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeError(w, http.StatusBadRequest, "Invalid request body")
@@ -75,7 +76,7 @@ func (s *Server) terminateSession(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) getDevices(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value("user_id").(string)
-	
+
 	devices, err := s.db.GetUserDevices(r.Context(), userID)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err.Error())
@@ -87,7 +88,7 @@ func (s *Server) getDevices(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) createDevice(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value("user_id").(string)
-	
+
 	var device models.Device
 	if err := json.NewDecoder(r.Body).Decode(&device); err != nil {
 		writeError(w, http.StatusBadRequest, "Invalid request body")
@@ -110,7 +111,7 @@ func (s *Server) createDevice(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) getSnapshots(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value("user_id").(string)
-	
+
 	snapshots, err := s.db.GetUserSnapshots(r.Context(), userID)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err.Error())

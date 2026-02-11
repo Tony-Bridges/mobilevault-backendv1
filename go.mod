@@ -1,4 +1,4 @@
-module github.com/yourusername/mobilevault-backend
+module github.com/Tony-Bridges/mobilevault-backendv1
 
 go 1.21
 

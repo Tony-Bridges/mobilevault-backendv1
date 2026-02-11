@@ -8,8 +8,8 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
-	"github.com/yourusername/mobilevault-backend/db"
-	"github.com/yourusername/mobilevault-backend/services/orchestrator"
+	"github.com/Tony-Bridges/mobilevault-backendv1v1/db"
+	"github.com/Tony-Bridges/mobilevault-backendv1v1/services/orchestrator"
 )
 
 type Server struct {
